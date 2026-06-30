@@ -1,7 +1,6 @@
 package com.umcsuser.carrent.services.impl;
 
 import com.umcsuser.carrent.models.User;
-import com.umcsuser.carrent.repositories.RentalRepository;
 import com.umcsuser.carrent.repositories.UserRepository;
 import com.umcsuser.carrent.services.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,15 @@ import java.util.List;
 
 @Service
 @Transactional
-public class  UserService implements UserServiceInterface {
+public class UserService implements UserServiceInterface {
+
     @Autowired
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepo;
-    private final RentalRepository rentalRepo;
 
-    public UserService(UserRepository userRepo, RentalRepository rentalRepo) {
+    public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.rentalRepo = rentalRepo;
     }
 
     @Override
@@ -40,19 +38,15 @@ public class  UserService implements UserServiceInterface {
     @Transactional(readOnly = true)
     public User findByLogin(String login) {
         return userRepo.findByLogin(login)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika z loginem: " + login));
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika: " + login));
     }
 
     @Override
     public void deleteUser(String id, String loggedUserId) {
-        boolean hasActiveRental = rentalRepo.findAll().stream()
-                .anyMatch(r -> id.equals(r.getUserId()) && r.isActive());
 
-        if (hasActiveRental) {
-            throw new IllegalStateException("Nie można usunąć użytkownika z aktywnym wynajmem.");
-        }
         userRepo.deleteById(id);
     }
+
     @Override
     public void register(String login, String password) {
         if (userRepo.findByLogin(login).isPresent()) {

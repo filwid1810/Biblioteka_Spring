@@ -1,8 +1,7 @@
 package com.umcsuser.carrent.db;
 
-import com.umcsuser.carrent.models.Rental;
+import com.umcsuser.carrent.models.Book;
 import com.umcsuser.carrent.models.User;
-import com.umcsuser.carrent.models.Vehicle;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -25,8 +24,8 @@ public class  HibernateConfig {
             configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
 
             configuration.addAnnotatedClass(User.class);
-            configuration.addAnnotatedClass(Vehicle.class);
-            configuration.addAnnotatedClass(Rental.class);
+            configuration.addAnnotatedClass(Book.class);
+
 
             sessionFactory = configuration.buildSessionFactory();
         } catch (Throwable ex) {

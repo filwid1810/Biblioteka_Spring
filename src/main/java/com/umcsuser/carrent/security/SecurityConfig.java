@@ -34,8 +34,8 @@ public class  SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/error").permitAll()
-                        .requestMatchers(r -> r.getMethod().equals("POST") &&
-                                r.getRequestURI().startsWith("/api/vehicles")).hasRole("ADMIN")
+                        .requestMatchers(r -> (r.getMethod().equals("POST") || r.getMethod().equals("DELETE")) &&
+                                r.getRequestURI().startsWith("/api/books")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authProvider)
