@@ -56,6 +56,16 @@ public class CartService {
 
     public void removeFromCart(String userId, String bookId) {
         Optional<CartItem> existingItem = cartRepository.findByUserIdAndBookId(userId, bookId);
-        existingItem.ifPresent(item -> cartRepository.deleteById(item.getId()));
+
+        if (existingItem.isPresent()) {
+            CartItem item = existingItem.get();
+
+            if (item.getQuantity() > 1) {
+                item.setQuantity(item.getQuantity() - 1);
+                cartRepository.save(item);
+            } else {
+                cartRepository.deleteById(item.getId());
+            }
+        }
     }
 }
